@@ -4,7 +4,7 @@ WORKDIR /app
 EXPOSE 5005
 EXPOSE 5006
 
-# Etapa de construção
+# Etapa de construÃ§Ã£o
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
@@ -18,14 +18,14 @@ COPY ["src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj", "src/L
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 
-# Restauração de dependências
+# RestauraÃ§Ã£o de dependÃªncias
 RUN dotnet restore src/LocalFriendzApi/LocalFriendzApi.csproj
 
 
-# Copiando todos os arquivos de código-fonte
+# Copiando todos os arquivos de cÃ³digo-fonte
 COPY . .
 
-# Construindo a aplicação
+# Construindo a aplicaÃ§Ã£o
 WORKDIR "/src/src/LocalFriendzApi"
 RUN dotnet build "LocalFriendzApi.csproj" -c Release -o /app/build
 
@@ -33,17 +33,18 @@ RUN dotnet build "LocalFriendzApi.csproj" -c Release -o /app/build
 WORKDIR "/src/src/LocalFriendzApi.Test"
 RUN dotnet build "LocalFriendzApi.IntegrationTests.csproj" -c Release -o /app/build
 
-# Etapa de publicação
+# Etapa de publicaÃ§Ã£o
 FROM build AS publish
 WORKDIR "/src/src/LocalFriendzApi"
 RUN dotnet publish "LocalFriendzApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Etapa final para a aplicação
+# Etapa final para a aplicaÃ§Ã£o
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Definindo as variáveis de ambiente para o PostgreSQL
+# Definindo as variÃ¡veis de ambiente para o PostgreSQL
 ENV ConnectionStrings__PostgreSqlConnection="Host=db;Database=DB_FIAP_ARQUITETO;Username=postgres;Password=Teste@123"
-
+ENV ASPNETCORE_URLS=http://+:5006
+ENV ASPNETCORE_ENVIRONMENT=Development
 ENTRYPOINT ["dotnet", "LocalFriendzApi.dll"]
