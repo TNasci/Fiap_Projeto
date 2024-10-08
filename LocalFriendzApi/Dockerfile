@@ -4,7 +4,7 @@ WORKDIR /app
 EXPOSE 5005
 EXPOSE 5006
 
-# Etapa de constru��o
+# Etapa de construção
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
@@ -18,14 +18,14 @@ COPY ["src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj", "src/L
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 
-# Restaura��o de depend�ncias
+# Restauração de dependências
 RUN dotnet restore src/LocalFriendzApi/LocalFriendzApi.csproj
 
 
-# Copiando todos os arquivos de c�digo-fonte
+# Copiando todos os arquivos de código-fonte
 COPY . .
 
-# Construindo a aplica��o
+# Construindo a aplicação
 WORKDIR "/src/src/LocalFriendzApi"
 RUN dotnet build "LocalFriendzApi.csproj" -c Release -o /app/build
 
@@ -33,7 +33,7 @@ RUN dotnet build "LocalFriendzApi.csproj" -c Release -o /app/build
 WORKDIR "/src/src/LocalFriendzApi.Test"
 RUN dotnet build "LocalFriendzApi.IntegrationTests.csproj" -c Release -o /app/build
 
-# Etapa de publica��o
+# Etapa de publicação
 FROM build AS publish
 WORKDIR "/src/src/LocalFriendzApi"
 RUN dotnet publish "LocalFriendzApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
