@@ -9,7 +9,10 @@ on:
   pull_request:
     branches: ["master"]
 
-  workflow_dispatch:
+env:  
+  ASPNETCORE_URLS: ${{ secrets.ASPNETCORE_URLS }}
+  ASPNETCORE_ENVIRONMENT: ${{ secrets.ASPNETCORE_ENVIRONMENT }}
+  ConnectionStrings__PostgreSqlConnection: ${{ secrets.ConnectionStrings__PostgreSqlConnection }}
 
 jobs:
   validation_security:
