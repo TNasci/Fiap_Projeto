@@ -21,6 +21,10 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 # Restauração de dependências
 RUN dotnet restore src/LocalFriendzApi/LocalFriendzApi.csproj
 
+# Copiando todos os arquivos de c�digo-fonte e outras pastas necess�rias
+COPY imgs /src/imgs
+COPY scripts /src/scripts
+
 
 # Copiando todos os arquivos de código-fonte
 COPY . .

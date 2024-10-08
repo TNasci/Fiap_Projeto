@@ -24,6 +24,8 @@ services:
       POSTGRES_PASSWORD: Teste@123
     ports:
       - "5432:5432"
+    volumes:
+      - ./scripts/FiapDB.sql:/docker-entrypoint-initdb.d/FiapDB.sql
     networks:
       - db-network
 networks:
