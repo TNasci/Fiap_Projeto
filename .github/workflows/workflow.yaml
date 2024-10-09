@@ -90,12 +90,6 @@ jobs:
             pg_isready -h db -U postgres && break || sleep 5;
           done
 
-      - name: Show tables in PostgreSQL database
-        run: |
-          psql -h localhost -U postgres -d DB_FIAP_ARQUITETO -c '\dt'
-        env:
-          PGPASSWORD: Teste@123
-
       # Passo 3: Restaura dependências necessárias para o projeto LocalFriendz
       - name: Restore dependencies for main project
         run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj
