@@ -96,6 +96,13 @@ jobs:
       - name: Variaveis de ambiente
         run: echo $ConnectionStrings__PostgreSqlConnection && echo $ASPNETCORE_URLS && echo $ASPNETCORE_ENVIRONMENT
 
+      # Passo 5: Verifica containers
+      - name: Check Containers
+        run: docker container ls
+      
+      - name: Check PostgreSQL logs
+        run: docker logs $(docker ps -q -f "name=db")
+
       - name: Build main project
         run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj --configuration Release --no-restore
 
