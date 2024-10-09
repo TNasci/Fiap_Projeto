@@ -70,9 +70,7 @@ jobs:
           POSTGRES_PASSWORD: Teste@123
           POSTGRES_DB: DB_FIAP_ARQUITETO
         ports:
-          - 5432:5432
-        volumes:
-          - ./FiapDB.sql:/docker-entrypoint-initdb.d/FiapDB.sql        
+          - 5432:5432    
         options: >-
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
@@ -90,17 +88,20 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Run PostgreSQL container with volume
+        run: |
+          docker run -d \
+          --name db \
+          -e POSTGRES_DB=DB_FIAP_ARQUITETO \
+          -e POSTGRES_USER=postgres \
+          -e POSTGRES_PASSWORD=Teste@123 \
+          -v ${{ github.workspace }}/scripts/FiapDB.sql:/docker-entrypoint-initdb.d/FiapDB.sql \
+          -p 5432:5432 \
+          postgres:15
+
       # Passo 3: Restaura dependências necessárias para o projeto LocalFriendz
       - name: Restore dependencies for main project
         run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj
-
-      # Passo 4: Variaveis de ambiente
-      - name: Variaveis de ambiente
-        run: echo $ConnectionStrings__PostgreSqlConnection && echo $ASPNETCORE_URLS && echo $ASPNETCORE_ENVIRONMENT
-
-      # Passo 5: Verifica containers
-      - name: Check Containers
-        run: docker container ls
 
       - name: Build main project
         run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj --configuration Release --no-restore
