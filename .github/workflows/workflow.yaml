@@ -70,6 +70,20 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+      pgbouncer:
+        image: pgbouncer/pgbouncer
+        env:
+          DATABASES_HOST: "db-api"
+          DATABASES_PORT: "5432"
+          DATABASES_USER: "postgres"
+          DATABASES_PASSWORD: "postgres"
+          DATABASES_DBNAME: "api"
+          PGBOUNCER_LISTEN_PORT: "6432"
+          POOL_MODE: "transection"
+          MAX_CLIENT_CONN: "30"
+          DEFAULT_POOL_SIZE: "20"
+        ports:
+          - "6432:6432"
     steps:        
       - name: Step 1 Checkout Repository
         uses: actions/checkout@v4
