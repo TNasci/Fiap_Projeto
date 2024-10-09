@@ -90,7 +90,7 @@ jobs:
 
       # Adiciona o container do banco de dados à rede personalizada
       - name: Connect db to custom network
-        run: docker network connect db-network db
+        run: docker network connect db-network $(docker container ls -aq)
         
       - name: Wait for PostgreSQL to be ready
         run: |
