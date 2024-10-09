@@ -101,7 +101,7 @@ jobs:
         run: docker container ls
       
       - name: Check PostgreSQL logs
-        run: docker logs $(docker ps -q -f "name=db")
+        run: docker logs $(docker ps -q -f ("name=db")
 
       - name: Test connectivity to db
         run: |
