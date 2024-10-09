@@ -92,6 +92,10 @@ jobs:
       - name: list docker containers
         run: docker container ls
 
+      - name: Run SQL Script to Create Database and Tables
+        run: |
+          PGPASSWORD=Teste@123 psql -h localhost -U postgres -d DB_FIAP_ARQUITETO -f ./LocalFriendzApi/scripts/FiapDB.sql
+
       - name: Restore dependencies for test project
         run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj
 
