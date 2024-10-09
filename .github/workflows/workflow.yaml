@@ -85,7 +85,7 @@ jobs:
           postgres:15
 
       - name: List running Docker containers
-        run: docker-compose ps
+        run: docker container ls
 
       # Passo 3: Restaura dependências necessárias para o projeto LocalFriendz
       - name: Restore dependencies for main project
