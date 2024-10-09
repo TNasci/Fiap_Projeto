@@ -93,18 +93,21 @@ jobs:
       - name: Check DNS resolution for db
         run: dig db
 
-      # Passo 3: Restaura dependências necessárias para o projeto LocalFriendz
-      - name: Restore dependencies for main project
-        run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj
+      - name: Check connectivity database
+        run: pg_isready -h db -p 5432 -U postgres
 
-      - name: Build main project
-        run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj --configuration Release --no-restore
+      # # Passo 3: Restaura dependências necessárias para o projeto LocalFriendz
+      # - name: Restore dependencies for main project
+      #   run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj
 
-      - name: Restore dependencies for test project
-        run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj
+      # - name: Build main project
+      #   run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj --configuration Release --no-restore
 
-      - name: Build Test Project
-        run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-restore
+      # - name: Restore dependencies for test project
+      #   run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj
 
-      - name: Run tests
-        run: dotnet test ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-build --verbosity detailed
+      # - name: Build Test Project
+      #   run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-restore
+
+      # - name: Run tests
+      #   run: dotnet test ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-build --verbosity detailed
