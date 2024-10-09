@@ -34,6 +34,20 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: Teste@123
+          POSTGRES_DB: DB_FIAP_ARQUITETO
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
       # Step 1: Checkout repository
       - name: Checkout Repository
@@ -55,23 +69,6 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    services:
-      db:
-        image: postgres:15
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_DB: DB_FIAP_ARQUITETO
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: Teste@123
-        options: > 
-          --health-cmd="pg_isready -U postgres" 
-          --health-interval=10s 
-          --health-timeout=5s 
-          --health-retries=5
-        networks:
-          - db-network
-
     steps:
       - name: Step 1 Checkout Repository
         uses: actions/checkout@v4
