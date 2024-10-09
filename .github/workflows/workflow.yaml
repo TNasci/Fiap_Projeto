@@ -87,7 +87,9 @@ jobs:
       # Lista os containers que estão rodando
       - name: List running Docker containers
         run: |
-          docker ps
+          host = $(docker container ls -aq)
+          echo $host
+          docker inspect $host
 
       - name: Restore dependencies for test project
         run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj
