@@ -91,7 +91,7 @@ jobs:
         run: docker logs $(docker ps -q --filter name=db)
       
       - name: Check DNS resolution for db
-        run: ping db
+        run: PGPASSWORD=Teste@123 psql -h localhost -U postgres -d DB_FIAP_ARQUITETO -c "SELECT 1;"
 
       # # Passo 3: Restaura dependências necessárias para o projeto LocalFriendz
       # - name: Restore dependencies for main project
