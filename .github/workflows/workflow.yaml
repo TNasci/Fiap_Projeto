@@ -80,10 +80,12 @@ jobs:
           
       - name: Wait for PostgreSQL to be ready
         run: |
-          until pg_isready -h db -p 5432; do
             echo "Waiting for PostgreSQL...";
-            sleep 5;
-          done
+            sleep 10;
+      
+      - name: Query PostgreSQL
+        run: |
+          docker container ls;
 
       - name: Restore dependencies for test project
         run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj
