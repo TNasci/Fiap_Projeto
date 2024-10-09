@@ -76,6 +76,14 @@ jobs:
           --health-timeout=5s
           --health-retries=5
     steps:
+      # Step 1: Create a custom network
+      - name: Create Docker network
+        run: docker network create my_network || true
+
+      # Step 2: Connect the db service to the custom network
+      - name: Connect Postgres to custom network
+        run: docker network connect my_network ${{ job.services.db.id }}
+        
       - name: Step 1 Checkout Repository
         uses: actions/checkout@v4
 
