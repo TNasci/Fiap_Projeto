@@ -89,17 +89,16 @@ jobs:
           docker ps
 
       # Mostra o hostname do container do PostgreSQL (ou qualquer outro)
-      - name: Show hostname of running containers
+      - name: Get PostgreSQL container hostname
+        id: get-db-hostname
         run: |
-          CONTAINERS=$(docker ps -q)
-          for container in $CONTAINERS; do
-            echo "Container ID: $container"
-            docker inspect -f '{{ .Config.Hostname }}' $container
-          done
+          HOSTNAME=$(docker inspect -f '{{ .Config.Hostname }}' $(docker ps -qf "name=db"))
+          echo "DB_HOSTNAME=$HOSTNAME" >> $GITHUB_ENV
 
-      # Step 4: Restore dependencies for test project
-      - name: Restore dependencies for test project
-        run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj
+      # Verifica se o banco de dados PostgreSQL está pronto usando o hostname capturado
+      - name: Check if PostgreSQL is ready
+        run: |
+          PGPASSWORD=Teste@123 pg_isready -U postgres -h ${{ env.DB_HOSTNAME }} -d DB_FIAP_ARQUITETO
 
       # Step 5: Build test project
       - name: Build Test Project
