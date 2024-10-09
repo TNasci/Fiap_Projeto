@@ -117,11 +117,3 @@ jobs:
 
       - name: Run tests
         run: dotnet test ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-build --verbosity detailed
-
-networks:
-  db-network:
-    driver: bridge
-
-      # Step 7: Run tests
-      - name: Run tests
-        run: dotnet test ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-build --verbosity detailed
