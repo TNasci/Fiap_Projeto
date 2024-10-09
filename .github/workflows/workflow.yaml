@@ -67,7 +67,7 @@ jobs:
                 POSTGRES_PASSWORD: Teste@123
             ports:
                 - 5432:5432
-            options: >
+            options: >-
                 --network-alias db
                 --health-cmd "pg_isready -U postgres -d DB_FIAP_ARQUITETO"
                 --health-interval 10s
