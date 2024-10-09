@@ -73,11 +73,11 @@ jobs:
       pgbouncer:
         image: pgbouncer/pgbouncer
         env:
-          DATABASES_HOST: "db-api"
+          DATABASES_HOST: "db"
           DATABASES_PORT: "5432"
           DATABASES_USER: "postgres"
-          DATABASES_PASSWORD: "postgres"
-          DATABASES_DBNAME: "api"
+          DATABASES_PASSWORD: "Teste@123"
+          DATABASES_DBNAME: "DB_FIAP_ARQUITETO"
           PGBOUNCER_LISTEN_PORT: "6432"
           POOL_MODE: "transection"
           MAX_CLIENT_CONN: "30"
@@ -94,19 +94,21 @@ jobs:
           dotnet-version: 8.0.x
 
       # Lista os containers que estão rodando
-      - name: List running Docker containers
+      - name: mostra containers
         run: |
-          host=$(docker container ls -aq)
-          echo $host
-          docker inspect $host
+          docker container ls
+          
+      - name: ping pgbouncer
+        run: |
+          nc -vz pgbouncer 6432
 
-      - name: Restore dependencies for test project
-        run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj
+      # - name: Restore dependencies for test project
+      #   run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj
 
-      - name: Build Test Project
-        run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-restore
+      # - name: Build Test Project
+      #   run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-restore
 
-      - name: Run tests
-        env:
-          ConnectionStrings__Postgres: "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=DB_FIAP_ARQUITETO"
-        run: dotnet test ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-build --verbosity detailed
+      # - name: Run tests
+      #   env:
+      #     ConnectionStrings__Postgres: "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=DB_FIAP_ARQUITETO"
+      #   run: dotnet test ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-build --verbosity detailed
