@@ -67,8 +67,6 @@ jobs:
           POSTGRES_DB: DB_FIAP_ARQUITETO
         ports:
           - 5432:5432
-        volumes:
-          - ${{ github.workspace }}/scritps/FiapDB.sql:/docker-entrypoint-initdb.d/FiapDB.sql
         options: >-
           --health-cmd="pg_isready"
           --health-interval=10s
