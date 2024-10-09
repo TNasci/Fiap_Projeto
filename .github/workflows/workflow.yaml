@@ -68,7 +68,7 @@ jobs:
         ports:
           - "5432:5432"
         volumes:
-          - ../LocalFriendzApi/scripts/FiapDB.sql:/docker-entrypoint-initdb.d/FiapDB.sql
+          - ./FiapDB.sql:/docker-entrypoint-initdb.d/FiapDB.sql
     steps:
       # Passo 1: Checkout do repositório para acessar o código fonte
       - name: Step 1 Checkout Repository
