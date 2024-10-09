@@ -93,10 +93,9 @@ jobs:
       - name: Check DNS resolution for db
         run: dig db
 
-      # Step to show PostgreSQL tables
       - name: Show tables in PostgreSQL database
         run: |
-          docker exec db psql -U postgres -d DB_FIAP_ARQUITETO -c '\dt'
+          psql -h localhost -U postgres -d DB_FIAP_ARQUITETO -c '\dt'
 
       # Passo 3: Restaura dependências necessárias para o projeto LocalFriendz
       - name: Restore dependencies for main project
