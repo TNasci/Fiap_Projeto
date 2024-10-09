@@ -83,6 +83,17 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 10
+          done
+      
+      - name: Test connectivity to db
+        run: |
+          ping -c 4 db
+
       - name: Restore dependencies for test project
         run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj
 
