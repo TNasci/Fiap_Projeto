@@ -58,43 +58,21 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     needs: build
-    services:
-      db:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: Teste@123
-          POSTGRES_DB: DB_FIAP_ARQUITETO
-        ports:
-          - 5432:5432
-        options: >-
-          --network-alias=db
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
     steps:
       # Passo 1: Checkout do repositório para acessar o código fonte
       - name: Step 1 Checkout Repository
         uses: actions/checkout@v4
 
-      # Passo 2: Configura o ambiente .NET com a versão especificada
-      - name: Step 2 Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      # Cria a rede Docker personalizada
-      - name: Setup Docker Network
-        run: docker network create db-network
+      - name: Set up Docker Compose
+        run: |
+          docker-compose up -d
 
-      # Adiciona o container do banco de dados à rede personalizada
-      - name: Connect db to custom network
-        run: docker network connect db-network $(docker container ls -aq)
-        
       - name: Wait for PostgreSQL to be ready
         run: |
-          until pg_isready -h localhost -p 5432 -U postgres; do
+          until pg_isready -h db -p 5432 -U postgres; do
             echo "Waiting for PostgreSQL to be ready..."
             sleep 10
           done
