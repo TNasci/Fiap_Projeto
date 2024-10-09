@@ -71,6 +71,8 @@ jobs:
           POSTGRES_DB: DB_FIAP_ARQUITETO
         ports:
           - 5432:5432
+        volumes:
+          - ./FiapDB.sql:/docker-entrypoint-initdb.d/FiapDB.sql        
         options: >-
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
@@ -99,9 +101,6 @@ jobs:
       # Passo 5: Verifica containers
       - name: Check Containers
         run: docker container ls
-      
-      - name: Check PostgreSQL logs
-        run: docker logs $(docker ps -q -f "name=db")
 
       - name: Build main project
         run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj --configuration Release --no-restore
