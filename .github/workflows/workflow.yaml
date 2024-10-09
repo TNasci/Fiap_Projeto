@@ -94,5 +94,5 @@ jobs:
 
       - name: Run tests
         env:
-          ConnectionStrings__Postgres: "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=localfriendz_db"
+          ConnectionStrings__Postgres: "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=DB_FIAP_ARQUITETO"
         run: dotnet test ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-build --verbosity detailed
