@@ -53,32 +53,30 @@ jobs:
       - name: Build main project
         run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj --configuration Release --no-restore
 
-  tests:
+  test:
     runs-on: ubuntu-latest
-    needs: build
     services:
-      postgres:
+      db:
         image: postgres:15
+        ports:
+          - 5432:5432
         env:
           POSTGRES_DB: DB_FIAP_ARQUITETO
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: Teste@123
-        ports:
-          - 5432:5432
-        options: >-
-          --network-alias db
-          --health-cmd "pg_isready -U postgres -d DB_FIAP_ARQUITETO"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        options: > 
+          --health-cmd="pg_isready -U postgres" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+        networks:
+          - db-network
 
     steps:
-      # Step 1: Checkout repository
-      - name: Checkout Repository
+      - name: Step 1 Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 2: Setup .NET environment
-      - name: Setup .NET
+      - name: Step 2 Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
@@ -87,26 +85,45 @@ jobs:
       - name: List running Docker containers
         run: |
           docker ps
-          
-      # Captura o hostname do container do PostgreSQL
-      - name: Get PostgreSQL container hostname
-        id: get-db-hostname
+
+      # Captura o ID do container do PostgreSQL usando o nome correto do serviço
+      - name: Get PostgreSQL container ID
+        id: get-db-id
         run: |
-          HOSTNAME=$(docker inspect -f '{{ .Config.Hostname }}' $(docker ps -qf "name=db"))
+          CONTAINER_ID=$(docker ps -qf "name=db")
+          if [ -z "$CONTAINER_ID" ]; then
+            echo "PostgreSQL container not found!"
+            exit 1
+          fi
+          echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
+
+      # Captura o hostname do container PostgreSQL
+      - name: Get PostgreSQL container hostname
+        run: |
+          HOSTNAME=$(docker inspect -f '{{ .Config.Hostname }}' ${{ env.CONTAINER_ID }})
           echo "DB_HOSTNAME=$HOSTNAME" >> $GITHUB_ENV
+
+      # Verifica se o banco de dados PostgreSQL está pronto usando o hostname capturado
+      - name: Check if PostgreSQL is ready
+        run: |
+          PGPASSWORD=Teste@123 pg_isready -U postgres -h ${{ env.DB_HOSTNAME }} -d DB_FIAP_ARQUITETO
 
       - name: Step 4 Create Database and Tables
         run: |
           PGPASSWORD=Teste@123 psql -U postgres -d DB_FIAP_ARQUITETO -h ${{ env.DB_HOSTNAME }} -f ./LocalFriendzApi/scripts/FiapDB.sql
 
-      # Step 5: Build test project
+      - name: Restore dependencies for test project
+        run: dotnet restore ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj
+
       - name: Build Test Project
         run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-restore
 
-      # Step 6: Run SQL script to create database and tables
-      - name: Run SQL Script to Create Database and Tables
-        run: |
-          PGPASSWORD=Teste@123 psql -U postgres -d DB_FIAP_ARQUITETO -h db -f ./LocalFriendzApi/scripts/FiapDB.sql
+      - name: Run tests
+        run: dotnet test ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-build --verbosity detailed
+
+networks:
+  db-network:
+    driver: bridge
 
       # Step 7: Run tests
       - name: Run tests
