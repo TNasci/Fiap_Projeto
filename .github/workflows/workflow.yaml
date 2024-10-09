@@ -68,6 +68,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
+          --network-alias=db
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
@@ -83,6 +84,14 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      # Cria a rede Docker personalizada
+      - name: Setup Docker Network
+        run: docker network create db-network
+
+      # Adiciona o container do banco de dados à rede personalizada
+      - name: Connect db to custom network
+        run: docker network connect db-network db
+        
       - name: Wait for PostgreSQL to be ready
         run: |
           until pg_isready -h localhost -p 5432 -U postgres; do
