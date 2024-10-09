@@ -103,10 +103,6 @@ jobs:
       - name: Check PostgreSQL logs
         run: docker logs $(docker ps -q -f "name=db")
 
-      - name: Test connectivity to db
-        run: |
-          ping -c 4 db
-
       - name: Build main project
         run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj --configuration Release --no-restore
 
