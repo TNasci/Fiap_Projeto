@@ -21,7 +21,7 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 # Restauração de dependências
 RUN dotnet restore src/LocalFriendzApi/LocalFriendzApi.csproj
 
-# Copiando todos os arquivos de c�digo-fonte e outras pastas necess�rias
+# Copiando todos os arquivos de c�digo-fonte e outras pastas necess�rias
 COPY imgs /src/imgs
 COPY scripts /src/scripts
 
@@ -48,7 +48,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Definindo as variáveis de ambiente para o PostgreSQL
-ENV ConnectionStrings__PostgreSqlConnection="Host=db;Database=DB_FIAP_ARQUITETO;Username=postgres;Password=Teste@123"
-ENV ASPNETCORE_URLS=http://+:5006
-ENV ASPNETCORE_ENVIRONMENT=Development
 ENTRYPOINT ["dotnet", "LocalFriendzApi.dll"]
