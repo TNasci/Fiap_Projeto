@@ -61,22 +61,7 @@ jobs:
   #       run: dotnet build ./LocalFriendzApi/src/LocalFriendzApi/LocalFriendzApi.csproj --configuration Release --no-restore
 
   tests:
-    runs-on: ubuntu-latest
-    services:
-      db:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: Teste@123
-          POSTGRES_DB: DB_FIAP_ARQUITETO
-        ports:
-          - 5432:5432    
-        options: >-
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-          
+    runs-on: ubuntu-latest          
     steps:
       # Passo 1: Checkout do repositório para acessar o código fonte
       - name: Step 1 Checkout Repository
