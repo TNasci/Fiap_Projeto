@@ -57,6 +57,15 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:15
+        env:
+          POSTGRES_DB: DB_FIAP_ARQUITETO
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: Teste@123
+        ports:
+          - "5432:5432"
     needs: build
     steps:
       # Passo 1: Checkout do repositório para acessar o código fonte
