@@ -91,10 +91,7 @@ jobs:
         run: docker logs $(docker ps -q --filter name=db)
       
       - name: Check DNS resolution for db
-        run: dig db
-
-      - name: Check connectivity database
-        run: pg_isready -h db -p 5432 -U postgres
+        run: ping db
 
       # # Passo 3: Restaura dependências necessárias para o projeto LocalFriendz
       # - name: Restore dependencies for main project
