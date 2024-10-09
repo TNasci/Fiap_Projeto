@@ -89,6 +89,13 @@ jobs:
       
       - name: Check PostgreSQL logs
         run: docker logs $(docker ps -q --filter name=db)
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for PostgreSQL to start...";
+            sleep 5;
+          done
       
       - name: Check DNS resolution for db
         run: PGPASSWORD=Teste@123 psql -h localhost -U postgres -d DB_FIAP_ARQUITETO -c "SELECT 1;"
