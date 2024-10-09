@@ -90,7 +90,7 @@ jobs:
 
         - name: Run SQL Script to Create Database and Tables
           run: |
-            PGPASSWORD=Teste@123 psql -U postgres -d DB_FIAP_ARQUITETO -h localhost -f ./scripts/FiapDB.sql
+            PGPASSWORD=Teste@123 psql -U postgres -d DB_FIAP_ARQUITETO -h localhost -f ./FiapDB.sql
 
         - name: Run tests
           run: dotnet test ./LocalFriendzApi/src/LocalFriendzApi.Test/LocalFriendzApi.IntegrationTests.csproj --configuration Release --no-build --verbosity detailed
