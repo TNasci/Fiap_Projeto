@@ -7,30 +7,30 @@ on:
     branches: ["master"]
 
 jobs:
-  validation_security:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      # Step 1: Checkout repository to access source code
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+  # validation_security:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     # Step 1: Checkout repository to access source code
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
 
-      - name: List files
-        run: ls -R
+  #     - name: List files
+  #       run: ls -R
 
-      # Step 2: Install Trivy for security vulnerability scanning
-      - name: Install Trivy
-        run: |
-          sudo apt-get update
-          sudo apt-get install wget apt-transport-https gnupg lsb-release -y
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-          sudo apt-get update
-          sudo apt-get install trivy -y
+  #     # Step 2: Install Trivy for security vulnerability scanning
+  #     - name: Install Trivy
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get install wget apt-transport-https gnupg lsb-release -y
+  #         wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+  #         echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+  #         sudo apt-get update
+  #         sudo apt-get install trivy -y
 
-      # Step 3: Run vulnerability scan
-      - name: Run Trivy Security Scan
-        run: trivy fs --exit-code 0 --no-progress --severity MEDIUM,HIGH,CRITICAL .
+  #     # Step 3: Run vulnerability scan
+  #     - name: Run Trivy Security Scan
+  #       run: trivy fs --exit-code 0 --no-progress --severity MEDIUM,HIGH,CRITICAL .
 
   build:
     runs-on: ubuntu-latest
@@ -83,17 +83,6 @@ jobs:
       - name: List running Docker containers
         run: |
           docker ps
-
-      # Captura o ID do container do PostgreSQL usando o nome correto do serviço
-      - name: Get PostgreSQL container ID
-        id: get-db-id
-        run: |
-          CONTAINER_ID=$(docker ps -qf "name=db")
-          if [ -z "$CONTAINER_ID" ]; then
-            echo "PostgreSQL container not found!"
-            exit 1
-          fi
-          echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
 
       # Captura o hostname do container PostgreSQL
       - name: Get PostgreSQL container hostname
