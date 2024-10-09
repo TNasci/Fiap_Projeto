@@ -84,14 +84,11 @@ jobs:
           -p 5432:5432 \
           postgres:15
 
-      - name: List running Docker containers
-        run: docker container ls
-
-      - name: Check PostgreSQL logs
-        run: docker logs $(docker ps -q --filter name=db)
-
-      - name: Check DNS resolution for db
-        run: dig db
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          for i in {1..10}; do
+            pg_isready -h db -U postgres && break || sleep 5;
+          done
 
       - name: Show tables in PostgreSQL database
         run: |
