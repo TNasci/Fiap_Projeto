@@ -87,18 +87,17 @@ jobs:
       - name: List running Docker containers
         run: |
           docker ps
-
-      # Mostra o hostname do container do PostgreSQL (ou qualquer outro)
+          
+      # Captura o hostname do container do PostgreSQL
       - name: Get PostgreSQL container hostname
         id: get-db-hostname
         run: |
           HOSTNAME=$(docker inspect -f '{{ .Config.Hostname }}' $(docker ps -qf "name=db"))
           echo "DB_HOSTNAME=$HOSTNAME" >> $GITHUB_ENV
 
-      # Verifica se o banco de dados PostgreSQL está pronto usando o hostname capturado
-      - name: Check if PostgreSQL is ready
+      - name: Step 4 Create Database and Tables
         run: |
-          PGPASSWORD=Teste@123 pg_isready -U postgres -h ${{ env.DB_HOSTNAME }} -d DB_FIAP_ARQUITETO
+          PGPASSWORD=Teste@123 psql -U postgres -d DB_FIAP_ARQUITETO -h ${{ env.DB_HOSTNAME }} -f ./LocalFriendzApi/scripts/FiapDB.sql
 
       # Step 5: Build test project
       - name: Build Test Project
